@@ -1,0 +1,52 @@
+library project RTS is
+   type Arch_Name is ("x86", "x86_64");
+   type Board_Name is ("x86", "x86_64");
+   type Build_Type is ("debug", "release");
+
+   Arch : Arch_Name  := "x86";
+   Board : Board_Name := external ("Board", "x86");
+   Mode : Build_Type := external ("Mode", "debug"); 
+
+   case Board is
+      when "x86" =>
+         Arch := "x86";
+      when "x86_64" =>
+     Arch := "x86_64";
+   end case;
+
+   for Source_Dirs use ("boards/" & Arch & "/adainclude");
+   for Object_Dir use "/root/ados/build/rts/" & Board & "/obj";
+
+   package Builder is
+      Basic_Switches := ("-gnat2022", "-gnatg", "-gnatec=gnat.adc");
+
+      case Board is
+         when "x86" =>
+            for Default_Switches ("Ada") use Basic_Switches;
+         when "x86_64" =>
+            for Default_Switches ("Ada") use Basic_Switches;
+      end case;
+   end Builder;
+
+   package Compiler is
+      Shared := ("-ffunction-sections", "-fdata-sections");
+
+      case Board is
+         when "x86" =>
+            Shared := Shared & ("-m32", "-march=i686");
+         when "x86_64" =>
+            Shared := Shared & ("-m64", "-march=x86-64");
+      end case;
+
+      case Mode is
+         when "debug" =>
+            for Default_Switches ("Ada") use Shared & ("-O0", "-g", "-ggdb");
+         when "release" =>
+            for Default_Switches ("Ada") use Shared & ("-O2");
+      end case;
+   end Compiler;
+
+   for Library_Kind use "static";
+   for Library_Name use "gnat";
+   for Library_Dir use "/root/ados/build/rts/" & Board & "/lib";
+end RTS;

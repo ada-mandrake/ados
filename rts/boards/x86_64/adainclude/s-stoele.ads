@@ -1,0 +1,1 @@
+/root/ados/rts/src/s-stoele.ads
