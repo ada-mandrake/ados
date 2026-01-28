@@ -5,7 +5,7 @@ project Ados is
    Arch : Arches := external ("Arch", "x86");
    Mode : Build_Type := external ("Mode", "debug");
 
-   for Languages use ("Ada");
+   for Languages use ("Ada", "Asm");
    for Source_Dirs use ("src/kernel/**", "src/arch/" & Arch & "/**");
    for Object_Dir use "build/" & Arch & "/obj";
    for Exec_Dir use "build/" & Arch & "/bin";
@@ -27,7 +27,7 @@ project Ados is
 
       case Mode is
          when "debug" =>
-            for Default_Switches ("Ada") use Basic_Switches & ("-g");
+            for Default_Switches ("Ada") use Basic_Switches & ("-g", "-ggdb");
          when "release" =>
             for Default_Switches ("Ada") use Basic_Switches;
       end case;
@@ -53,13 +53,6 @@ project Ados is
             for Default_Switches ("Ada") use Shared & ("-O0", "-g", "-ggdb");
          when "release" =>
             for Default_Switches ("Ada") use Shared & ("-O2");
-      end case;
-
-      case Arch is
-         when "x86" =>
-            for Default_Switches ("Ada") use Shared;
-         when "x64" =>
-            for Default_Switches ("Ada") use Shared;
       end case;
    end Compiler;
 
