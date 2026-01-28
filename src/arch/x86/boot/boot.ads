@@ -11,7 +11,7 @@ package Boot is
    Header : constant Multiboot_Header := (
       Magic => 16#1BADB002#,
       Flags => 0,
-      Checksum => -(16#1BADB002# + 0)
+      Checksum => -(16#1BADB002# + 16#00#)
    );
    pragma Linker_Section (Header, ".multiboot");
 end Boot;
