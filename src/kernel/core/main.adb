@@ -2,29 +2,37 @@ with Boot;
 with Serial;
 with VGA;
 with GDT;
+
 pragma Unreferenced (Boot);
 
 procedure Main is
 begin
    if Serial.Initialise_Serial (Serial.COM1) /= 0 then
-      Serial.Write_Char (Serial.COM1, 'X');
+      Serial.Write_String (Serial.COM1, "Serial Error\n");
    else
-      Serial.Write_Char (Serial.COM1,  'Y');
+      Serial.Write_String (Serial.COM1, "Serial\tLoaded\n");
    end if;
-   for C in Character'Range loop
-      Serial.Write_Char (Serial.COM1, C);
-   end loop;
 
    VGA.Initialise_VGA;
-   VGA.Write_String ("AAAAAAAAAAAAAAAAAAAAAAA");
-   VGA.Write_String ("AAAAAAAAAAAAAAAAAAAAAAA");
-   VGA.Write_String ("AAAAAAAAAAAAAAAAAAAAAAA");
-   VGA.Write_String ("AAAAAAAAAAX");
-   VGA.Write_String ("Y");
+   VGA.Set_Colour (VGA.Light_Green, VGA.Yellow);
+   --  VGA.Write_String ("VGA Loaded");
+   Serial.Write_String (Serial.COM1, "VGA\tLoaded\n");
 
    GDT.Initialise_GDT;
+   Serial.Write_String (Serial.COM1, "GDT\tLoaded\n");
 
-   VGA.Write_String ("GDT Loaded GG");
+   for I in 0 .. 10 loop
+      for X in 0 .. 79 loop
+         VGA.Write_String ("Y");
+      end loop;
+   end loop;
+
+   VGA.Set_Colour (VGA.Light_Blue, VGA.Red);
+   for I in 0 .. 10 loop
+      for X in 0 .. 79 loop
+         VGA.Write_String ("X");
+      end loop;
+   end loop;
    loop
       null;
    end loop;
