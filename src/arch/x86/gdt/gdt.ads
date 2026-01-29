@@ -2,6 +2,7 @@ with System;
 with Interfaces; use Interfaces;
 
 package GDT is
+   type Unsigned_3 is mod 2**2;
    type Unsigned_4 is mod 2**4;
    type Unsigned_20 is mod 2**20;
 
@@ -11,7 +12,7 @@ package GDT is
       Direction_Conforming : Boolean;
       Executable : Boolean;
       Descriptor_Type : Boolean;
-      Privilege_Level : Integer range 0 .. 3;
+      Privilege_Level : Unsigned_3;
       Present : Boolean;
    end record;
    for Access_Byte'Size use 8;
@@ -50,9 +51,9 @@ package GDT is
    pragma Pack (GDTR);
 
    type Global_Descriptor_Table is
-      array (Natural range <>) of Segment_Descriptor;
+      array (Natural range 0 .. 8191) of aliased Segment_Descriptor;
 
-   Table : Global_Descriptor_Table (0 .. 2);
+   Table : Global_Descriptor_Table;
    Pointer : GDTR;
 
    function Create_Flags (
@@ -67,7 +68,7 @@ package GDT is
       Direction_Conforming : Boolean;
       Executable : Boolean;
       Descriptor_Type : Boolean;
-      Privilege_Level : Integer;
+      Privilege_Level : Unsigned_3;
       Present : Boolean
    ) return Access_Byte;
 

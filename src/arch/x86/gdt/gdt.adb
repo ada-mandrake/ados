@@ -23,7 +23,7 @@ package body GDT is
       Direction_Conforming : Boolean;
       Executable : Boolean;
       Descriptor_Type : Boolean;
-      Privilege_Level : Integer;
+      Privilege_Level : Unsigned_3;
       Present : Boolean
    ) return Access_Byte is
       Access_Byte : GDT.Access_Byte;
@@ -64,6 +64,7 @@ package body GDT is
       Access_Byte : GDT.Access_Byte;
       Flags : GDT.Flags;
    begin
+      --  Null segment
       Flags := Create_Flags (False, False, False);
       Access_Byte := Create_Access_Byte (
          False,
@@ -83,6 +84,7 @@ package body GDT is
 
       Table (0) := Segment;
 
+      --  Kernel code segment
       Flags := Create_Flags (False, True, True);
       Access_Byte := Create_Access_Byte (
          False,
@@ -102,6 +104,7 @@ package body GDT is
 
       Table (1) := Segment;
 
+      --  Kernel data segment
       Flags := Create_Flags (False, True, True);
       Access_Byte := Create_Access_Byte (
          False,
@@ -127,7 +130,7 @@ package body GDT is
       Asm (
          Template =>
             "cli" & ASCII.LF &
-            "lgdt (%0)" & ASCII.LF &
+            "lgdt %0" & ASCII.LF &
             "ljmp $0x08, $.reload_cs" & ASCII.LF &
             ".reload_cs:" & ASCII.LF &
             "movw $0x10, %%ax" & ASCII.LF &
@@ -136,7 +139,7 @@ package body GDT is
             "movw %%ax, %%fs" & ASCII.LF &
             "movw %%ax, %%gs" & ASCII.LF &
             "movw %%ax, %%ss",
-         Inputs => System.Address'Asm_Input ("r", Pointer'Address),
+         Inputs => GDTR'Asm_Input ("m", Pointer),
          Volatile => True,
          Clobber => "ax,memory"
       );
