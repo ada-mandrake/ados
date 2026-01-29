@@ -1,56 +1,39 @@
 with System;
 
 package VGA is
+   VGA_ROWS : constant Natural := 25;
+   VGA_COLUMNS : constant Natural := 80;
+
    type Colours is (
-      BLACK,
-      BLUE,
-      GREEN,
-      CYAN,
-      RED,
-      MAGENTA,
-      BROWN,
-      LIGHT_GREY,
-      DARK_GREY,
-      LIGHT_BLUE,
-      LIGHT_GREEN,
-      LIGHT_CYAN,
-      LIGHT_RED,
-      LIGHT_MAGENTA,
-      LIGHT_BROWN,
-      WHITE
-   );
-   for Colours use (
-      BLACK => 0,
-      BLUE => 1,
-      GREEN => 2,
-      CYAN => 3,
-      RED => 4,
-      MAGENTA => 5,
-      BROWN => 6,
-      LIGHT_GREY => 7,
-      DARK_GREY => 8,
-      LIGHT_BLUE => 9,
-      LIGHT_GREEN => 10,
-      LIGHT_CYAN => 11,
-      LIGHT_RED => 12,
-      LIGHT_MAGENTA => 13,
-      LIGHT_BROWN => 14,
-      WHITE => 15
+      Black,
+      Blue,
+      Green,
+      Cyan,
+      Red,
+      Magenta,
+      Brown,
+      Light_Grey,
+      Dark_Grey,
+      Light_Blue,
+      Light_Green,
+      Light_Cyan,
+      Light_Red,
+      Light_Magenta,
+      Yellow,
+      White
    );
 
    type VGA_Colour is record
-      Foreground : Integer range 0 .. 7;
-      Bright_F : Boolean;
-      Background : Integer range 0 .. 7;
-      Bright_B : Boolean;
+      Foreground : Integer range 0 .. 15;
+      Background : Integer range 0 .. 15;
    end record;
 
    for VGA_Colour use record
-      Foreground at 0 range 0 .. 2;
-      Bright_F at 0 range 3 .. 3;
-      Background at 0 range 4 .. 6;
-      Bright_B at 0 range 7 .. 7;
+      Foreground at 0 range 0 .. 3;
+      Background at 0 range 4 .. 7;
    end record;
+   for VGA_Colour'Size use 8;
+   for VGA_Colour'Alignment use 1;
 
    type VGA_Entry is record
       C : Character;
@@ -61,19 +44,28 @@ package VGA is
       C at 0 range 0 .. 7;
       Attribute at 1 range 0 .. 7;
    end record;
+   for VGA_Entry'Size use 16;
+   for VGA_Entry'Alignment use 1;
 
-   type VGA_Array is array (Natural range <>) of VGA_Entry;
+   type VGA_Array is
+      array (Natural range 0 .. 3999)
+      of aliased VGA_Entry;
+   for VGA_Array'Alignment use 2;
 
-   VGA_Memory : VGA_Array (0 .. 3999);
+   VGA_Memory : VGA_Array;
    for VGA_Memory'Address use System'To_Address (16#B8000#);
 
-   VGA_ROWS : constant Natural := 25;
-   VGA_COLUMNS : constant Natural := 80;
-
    procedure Initialise_VGA;
+   procedure Set_Colour (Fg, Bg : Colours);
+   function Get_Colour return VGA_Colour;
    procedure Write_Char (C : Character);
    procedure Write_String (S : String);
 
 private
+   Current_Colour : VGA_Colour := (
+      Foreground => Colours'Pos (White),
+      Background => Colours'Pos (Black)
+   );
+
    procedure Put_Char (C : Character; X, Y : Natural);
 end VGA;
