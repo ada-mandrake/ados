@@ -1,4 +1,5 @@
 with System;
+with Interfaces; use Interfaces;
 
 package VGA is
    VGA_ROWS : constant Natural := 25;
@@ -58,6 +59,10 @@ package VGA is
    procedure Initialise_VGA;
    procedure Set_Colour (Fg, Bg : Colours);
    function Get_Colour return VGA_Colour;
+   procedure Enable_Cursor;
+   procedure Disable_Cursor;
+   procedure Set_Cursor_Shape (Cursor_Start, Cursor_End : Unsigned_8);
+   procedure Set_Cursor (X, Y : Integer);
    procedure Write_Char (C : Character);
    procedure Write_String (S : String);
 
