@@ -1,4 +1,7 @@
+with TSS;
+
 with System.Machine_Code; use System.Machine_Code;
+with System.Storage_Elements; use System.Storage_Elements;
 
 package body GDT is
    function Create_Flags (
@@ -123,6 +126,66 @@ package body GDT is
       );
 
       Table (2) := Segment;
+
+      --  User code segment
+      Flags := Create_Flags (False, True, True);
+      Access_Byte := Create_Access_Byte (
+         False,
+         True,
+         False,
+         True,
+         True,
+         3,
+         True
+      );
+      Segment := Create_Segment_Descriptor (
+         16#FFFFF#,
+         0,
+         Access_Byte,
+         Flags
+      );
+
+      Table (3) := Segment;
+
+      --  User data segment
+      Flags := Create_Flags (False, True, True);
+      Access_Byte := Create_Access_Byte (
+         False,
+         True,
+         False,
+         False,
+         True,
+         3,
+         True
+      );
+      Segment := Create_Segment_Descriptor (
+         16#FFFFF#,
+         0,
+         Access_Byte,
+         Flags
+      );
+
+      Table (4) := Segment;
+
+      --  Task state segment
+      Flags := Create_Flags (False, False, False);
+      Access_Byte := Create_Access_Byte (
+         True,
+         False,
+         False,
+         True,
+         False,
+         0,
+         True
+      );
+      Segment := Create_Segment_Descriptor (
+         TSS.TSS'Size / 8,
+         Unsigned_32 (To_Integer (TSS.Task_State_Segment'Address)),
+         Access_Byte,
+         Flags
+      );
+
+      Table (5) := Segment;
 
       Pointer.Size := Unsigned_16 (Table'Length * 8 - 1);
       Pointer.Offset := Table'Address;
