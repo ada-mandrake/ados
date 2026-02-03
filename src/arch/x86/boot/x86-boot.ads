@@ -1,6 +1,6 @@
 with Interfaces; use Interfaces;
 
-package Boot is
+package x86.Boot is
    type Multiboot_Header is record
       Magic : Unsigned_32;
       Flags : Unsigned_32;
@@ -14,4 +14,4 @@ package Boot is
       Checksum => -(16#1BADB002# + 16#00#)
    );
    pragma Linker_Section (Header, ".multiboot");
-end Boot;
+end x86.Boot;

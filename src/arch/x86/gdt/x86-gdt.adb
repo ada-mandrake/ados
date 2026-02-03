@@ -1,15 +1,15 @@
-with TSS;
+with x86.TSS;
 
 with System.Machine_Code; use System.Machine_Code;
 with System.Storage_Elements; use System.Storage_Elements;
 
-package body GDT is
+package body x86.GDT is
    function Create_Flags (
       Long_Mode : Boolean := False;
       Size : Boolean;
       Granularity : Boolean
    ) return Flags is
-      Flags : GDT.Flags;
+      Flags : x86.GDT.Flags;
    begin
       Flags := (
          Reserved => False,
@@ -29,7 +29,7 @@ package body GDT is
       Privilege_Level : Unsigned_3;
       Present : Boolean
    ) return Access_Byte is
-      Access_Byte : GDT.Access_Byte;
+      Access_Byte : x86.GDT.Access_Byte;
    begin
       Access_Byte := (
          Accessed => Accessed,
@@ -46,10 +46,10 @@ package body GDT is
    function Create_Segment_Descriptor (
       Limit : Unsigned_20;
       Base : Unsigned_32;
-      Access_Byte : GDT.Access_Byte;
-      Flags : GDT.Flags
+      Access_Byte : x86.GDT.Access_Byte;
+      Flags : x86.GDT.Flags
    ) return Segment_Descriptor is
-      Segment_Descriptor : GDT.Segment_Descriptor;
+      Segment_Descriptor : x86.GDT.Segment_Descriptor;
    begin
       Segment_Descriptor.Limit_Low := Unsigned_16 (Limit and 16#FFFF#);
       Segment_Descriptor.Base_Low := Unsigned_16 (Base and 16#FFFF#);
@@ -64,8 +64,8 @@ package body GDT is
 
    procedure Initialise_GDT is
       Segment : Segment_Descriptor;
-      Access_Byte : GDT.Access_Byte;
-      Flags : GDT.Flags;
+      Access_Byte : x86.GDT.Access_Byte;
+      Flags : x86.GDT.Flags;
    begin
       --  Null segment
       Flags := Create_Flags (False, False, False);
@@ -179,7 +179,7 @@ package body GDT is
          True
       );
       Segment := Create_Segment_Descriptor (
-         TSS.TSS'Size / 8,
+         x86.TSS.TSS'Size / 8,
          Unsigned_32 (To_Integer (TSS.Task_State_Segment'Address)),
          Access_Byte,
          Flags
@@ -207,4 +207,4 @@ package body GDT is
          Clobber => "ax,memory"
       );
    end Initialise_GDT;
-end GDT;
+end x86.GDT;

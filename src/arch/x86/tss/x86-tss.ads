@@ -1,7 +1,7 @@
 with System;
 with Interfaces; use Interfaces;
 
-package TSS is
+package x86.TSS is
    type Unsigned_2 is range 0 .. 1;
    type Unsigned_13 is range 0 .. 12;
 
@@ -68,4 +68,4 @@ package TSS is
    procedure Initialise_TSS;
    procedure Flush_TSS;
    procedure Set_Kernel_Stack (Stack : System.Address);
-end TSS;
+end x86.TSS;

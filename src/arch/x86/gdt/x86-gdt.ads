@@ -1,7 +1,7 @@
 with System;
 with Interfaces; use Interfaces;
 
-package GDT is
+package x86.GDT is
    type Unsigned_3 is mod 2**2;
    type Unsigned_4 is mod 2**4;
    type Unsigned_20 is mod 2**20;
@@ -33,9 +33,9 @@ package GDT is
       Limit_Low : Unsigned_16;
       Base_Low : Unsigned_16;
       Base_Middle : Unsigned_8;
-      Access_Byte : GDT.Access_Byte;
+      Access_Byte : x86.GDT.Access_Byte;
       Limit_High : Unsigned_4;
-      Flags : GDT.Flags;
+      Flags : x86.GDT.Flags;
       Base_High : Unsigned_8;
    end record;
    for Segment_Descriptor'Size use 64;
@@ -75,9 +75,9 @@ package GDT is
    function Create_Segment_Descriptor (
       Limit : Unsigned_20;
       Base : Unsigned_32;
-      Access_Byte : GDT.Access_Byte;
-      Flags : GDT.Flags
+      Access_Byte : x86.GDT.Access_Byte;
+      Flags : x86.GDT.Flags
    ) return Segment_Descriptor;
 
    procedure Initialise_GDT;
-end GDT;
+end x86.GDT;

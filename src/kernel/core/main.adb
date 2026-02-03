@@ -1,13 +1,13 @@
-with Boot;
+with x86.Boot;
 with Serial;
 with VGA;
-with GDT;
-with TSS;
+with x86.GDT;
+with x86.TSS;
 
 with System;
 with System.Machine_Code; use System.Machine_Code;
 
-pragma Unreferenced (Boot);
+pragma Unreferenced (x86.Boot);
 
 procedure Main is
    ESP, EBP : System.Address;
@@ -35,10 +35,10 @@ begin
    VGA.Write_String ("VGA Loaded");
    Serial.Write_String (Serial.COM1, "VGA\tLoaded\n");
 
-   GDT.Initialise_GDT;
+   x86.GDT.Initialise_GDT;
    Serial.Write_String (Serial.COM1, "GDT\tLoaded\n");
 
-   TSS.Initialise_TSS;
+   x86.TSS.Initialise_TSS;
    Serial.Write_String (Serial.COM1, "TSS\tLoaded\n");
 
    Asm (
@@ -57,7 +57,7 @@ begin
 
    Serial.Write_String (
       Serial.COM1,
-      "ESP0:\t" & TSS.Task_State_Segment.ESP0'Image & "\n"
+      "ESP0:\t" & x86.TSS.Task_State_Segment.ESP0'Image & "\n"
    );
    Serial.Write_String (Serial.COM1, "ESP:\t" & ESP'Image & "\n");
    Serial.Write_String (Serial.COM1, "EBP:\t" & EBP'Image & "\n");
