@@ -13,5 +13,5 @@ package x86.Boot is
       Flags => 0,
       Checksum => -(16#1BADB002# + 16#00#)
    );
-   pragma Linker_Section (Header, ".multiboot");
+   pragma Linker_Section (Header, ".boot");
 end x86.Boot;

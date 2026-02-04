@@ -1,2 +1,2 @@
 procedure Main;
-pragma Export (C, Main, "_start");
+pragma Export (C, Main, "kmain");

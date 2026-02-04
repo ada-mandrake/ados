@@ -1,11 +1,11 @@
 OUTPUT_FORMAT(elf32-i386)
-ENTRY(_start)
+ENTRY(kmain)
 
 SECTIONS {
   . = 2M;
 
-  .multiboot : {
-    KEEP(*(.multiboot))
+  .boot : {
+    KEEP(*(.boot))
   }
 
   .text BLOCK(4K) : ALIGN(4K) {

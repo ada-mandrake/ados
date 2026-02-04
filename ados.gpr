@@ -1,16 +1,26 @@
 project Ados is
-   type Arches is ("x86", "x86_64");
+   type Arches is ("x86", "x86_64", "riscv32", "riscv64");
    type Build_Type is ("debug", "release");
 
    Arch : Arches := external ("Arch", "x86");
    Mode : Build_Type := external ("Mode", "debug");
 
-   for Languages use ("Ada", "Asm");
+   for Languages use ("Ada", "C", "Asm_Cpp");
    for Source_Dirs use ("src/kernel/**", "src/arch/" & Arch & "/**");
    for Object_Dir use "build/" & Arch & "/obj";
    for Exec_Dir use "build/" & Arch & "/bin";
    for Main use ("main.adb");
-   for Target use "i686-elf";
+
+   case Arch is
+      when "x86" =>
+         for Target use "i686-elf";
+      when "x86_64" =>
+         for Target use "x86_64-elf";
+      when "riscv32" =>
+         for Target use "riscv32-elf";
+      when "riscv64" =>
+         for Target use "riscv64-elf";
+   end case;
    for Runtime ("Ada") use external ("RTS", "custom");
 
    package Builder is
@@ -46,6 +56,10 @@ project Ados is
             Shared := Shared & ("-m32", "-march=i686");
          when "x86_64" =>
             Shared := Shared & ("-m64", "-march=x86-64");
+         when "riscv32" =>
+            Shared := Shared & ("-march=rv32g", "-mabi=ilp32d", "-mcmodel=medany");
+         when "riscv64" =>
+            Shared := Shared & ("-march=rv64g", "-mabi=lp64d", "-mcmodel=medany");
       end case;
 
       case Mode is
@@ -56,6 +70,14 @@ project Ados is
       end case;
 
       for Default_Switches ("Ada") use Shared;
+      case Arch is
+         when "riscv32" =>
+            for Default_Switches ("Asm_Cpp") use ("-Wa,-march=rv32g_zilsd");
+         when "riscv64" =>
+            for Default_Switches ("Asm_Cpp") use ("-Wa,-march=rv64g_zilsd");
+         when others => null;
+      end case;
+      for Default_Switches ("C") use ("-mcmodel=medany");
    end Compiler;
 
    package Binder is
@@ -64,6 +86,10 @@ project Ados is
             for Switches ("Ada") use ("-I/root/ados/build/rts/x86/lib");
          when "x86_64" =>
             for Switches ("Ada") use ("-I/root/ados/build/rts/x86_64/lib");
+         when "riscv32" =>
+            for Switches ("Ada") use ("-I/root/ados/build/rts/riscv32/lib");
+         when "riscv64" =>
+            for Switches ("Ada") use ("-I/root/ados/build/rts/riscv64/lib");
       end case;
    end Binder;
 
@@ -99,6 +125,39 @@ project Ados is
                "-lgcc",
                "-Wl,--end-group",
                "-Wl,-z,noexecstack",
+               "-T/root/ados/src/arch/" & Arch & "/linker.ld"
+            );
+         when "riscv32" =>
+            for Default_Switches ("Ada") use (
+               "-L/root/ados/build/rts/riscv32/lib",
+               "-nostartfiles",
+               "-nodefaultlibs",
+               "-nostdlib",
+               "-ffreestanding",
+               "-static",
+               "-Wl,--gc-sections",
+               "-Wl,--start-group",
+               "-lgnat",
+               "-lgcc",
+               "-Wl,--end-group",
+               "-Wl,-z,noexecstack",
+               "-T/root/ados/src/arch/" & Arch & "/linker.ld"
+            );
+         when "riscv64" =>
+            for Default_Switches ("Ada") use (
+               "-L/root/ados/build/rts/riscv64/lib",
+               "-nostartfiles",
+               "-nodefaultlibs",
+               "-nostdlib",
+               "-ffreestanding",
+               "-static",
+               "-Wl,--gc-sections",
+               "-Wl,--start-group",
+               "-lgnat",
+               "-lgcc",
+               "-Wl,--end-group",
+               "-Wl,-z,noexecstack",
+               "-mcmodel=medany",
                "-T/root/ados/src/arch/" & Arch & "/linker.ld"
             );
       end case;

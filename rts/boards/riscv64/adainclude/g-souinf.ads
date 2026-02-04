@@ -1,0 +1,1 @@
+/root/ados/rts/src/g-souinf.ads

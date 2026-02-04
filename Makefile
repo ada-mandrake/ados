@@ -7,7 +7,7 @@ MODE ?= debug
 all: rts kernel
 
 rts:
-	mkdir -p build/rts/x86/{obj,lib}
+	mkdir -p build/rts/$(ARCH)/{obj,lib}
 	cd rts && \
 	gprbuild -P rts.gpr -v -XMode=$(MODE) -XBoard=$(ARCH)
 
@@ -22,6 +22,12 @@ x86:
 
 x86_64:
 	$(MAKE) ARCH=x86_64
+
+riscv32:
+	@printf "This target is broken\n"
+
+riscv64:
+	$(MAKE) ARCH=riscv64
 
 clean:
 	rm -rf build/
