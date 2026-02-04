@@ -1,1 +1,1 @@
-/root/ados/rts/src/interfac.ads
+../../../src/interfac.ads

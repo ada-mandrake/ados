@@ -1,1 +1,1 @@
-/root/ados/rts/src/s-maccod.ads
+../../../src/s-maccod.ads

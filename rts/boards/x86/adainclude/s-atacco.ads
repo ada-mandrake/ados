@@ -1,1 +1,1 @@
-/root/ados/rts/src/s-atacco.ads
+../../../src/s-atacco.ads

@@ -1,1 +1,1 @@
-/root/ados/rts/src/s-imguns.ads
+../../../src/s-imguns.ads

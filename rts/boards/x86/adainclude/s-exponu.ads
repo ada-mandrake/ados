@@ -1,1 +1,1 @@
-/root/ados/rts/src/s-exponu.ads
+../../../src/s-exponu.ads

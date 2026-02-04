@@ -1,1 +1,1 @@
-/root/ados/rts/src/s-unstyp.ads
+../../../src/s-unstyp.ads

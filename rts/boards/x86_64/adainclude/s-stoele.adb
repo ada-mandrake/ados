@@ -1,1 +1,1 @@
-/root/ados/rts/src/s-stoele.adb
+../../../src/s-stoele.adb

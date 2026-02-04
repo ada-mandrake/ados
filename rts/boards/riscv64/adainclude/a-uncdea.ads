@@ -1,1 +1,1 @@
-/root/ados/rts/src/a-uncdea.ads
+../../../src/a-uncdea.ads

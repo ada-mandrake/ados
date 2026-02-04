@@ -1,1 +1,1 @@
-/root/ados/rts/src/s-stoele.ads
+../../../src/s-stoele.ads

@@ -1,1 +1,1 @@
-/root/ados/rts/src/g-souinf.ads
+../../../src/g-souinf.ads

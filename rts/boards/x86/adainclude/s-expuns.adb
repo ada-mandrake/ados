@@ -1,1 +1,1 @@
-/root/ados/rts/src/s-expuns.adb
+../../../src/s-expuns.adb

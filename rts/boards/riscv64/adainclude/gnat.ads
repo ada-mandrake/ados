@@ -1,1 +1,1 @@
-/root/ados/rts/src/gnat.ads
+../../../src/gnat.ads

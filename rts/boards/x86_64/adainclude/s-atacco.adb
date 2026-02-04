@@ -1,1 +1,1 @@
-/root/ados/rts/src/s-atacco.adb
+../../../src/s-atacco.adb

@@ -1,1 +1,1 @@
-/root/ados/rts/src/s-imguns.adb
+../../../src/s-imguns.adb

@@ -1,1 +1,1 @@
-/root/ados/rts/src/ada.ads
+../../../src/ada.ads
