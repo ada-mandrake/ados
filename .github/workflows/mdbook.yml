@@ -3,35 +3,48 @@ on:
   push:
     branches:
       - documentation
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency: 
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Install latest mdbook
-      run: |
-        tag=$(curl 'https://api.github.com/repos/rust-lang/mdbook/releases/latest' | jq -r '.tag_name')
-        url="https://github.com/rust-lang/mdbook/releases/download/${tag}/mdbook-${tag}-x86_64-unknown-linux-gnu.tar.gz"
-        mkdir mdbook
-        curl -sSL $url | tar -xz --directory=./mdbook
-        echo `pwd`/mdbook >> $GITHUB_PATH
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install mdbook
+        run: |
+          curl --proto '=https' --tlsv1.2 https://sh.rustup.sh -sSf -y | sh
+          rustup update
+          cargo install mdbook
+      - name: Setup pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Build mdbook
+        run: mdbook build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./book
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    steps:
     - name: Deploy GitHub Pages
-      run: |
-        mdbook build
-        git worktree add gh-pages
-        git config user.name "Deploy from CI"
-        git config user.email ""
-        cd gh-pages
-        git update-ref -d refs/heads/gh-pages
-        rm -rf *
-        mv ../book/* .
-        git add .
-        git commit -m "Deploy $GITHUB_SHA to GitHub Pages"
-        git push --force --set-upstream origin gh-pages
-  
+      id: deployment
+      uses: actions/deploy-pages@v4
