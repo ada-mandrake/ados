@@ -1,9 +1,9 @@
-with CPU;
-pragma Unreferenced (CPU);
+with Boot;
+
+pragma Unreferenced (Boot);
 
 procedure Main is
 begin
-   CPU.Setup_CPU;
    loop
       null;
    end loop;

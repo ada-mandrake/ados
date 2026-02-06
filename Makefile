@@ -13,8 +13,8 @@ rts:
 
 kernel:
 	gprbuild -P ados.gpr -v -XArch=$(ARCH) -XRTS=rts/boards/$(ARCH) -XMode=$(MODE)
-	if [ "$(MODE)" = "release" ]; then\
-		strip -g -S -d build/$(ARCH)/bin/ados.out;\
+	@if [ "$(MODE)" = "release" ]; then\
+		@strip -g -S -d build/$(ARCH)/bin/ados.out;\
 	fi
 
 x86:

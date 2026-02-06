@@ -1,11 +1,15 @@
 OUTPUT_FORMAT(elf32-i386)
-ENTRY(kmain)
+ENTRY(_start)
 
 SECTIONS {
   . = 2M;
 
+  .multiboot : {
+    KEEP(*(.multiboot))
+  }
+
   .boot : {
-    KEEP(*(.boot))
+    KEEP(*(.init))
   }
 
   .text BLOCK(4K) : ALIGN(4K) {
@@ -42,7 +46,6 @@ SECTIONS {
   stack_top = .;
 
   /DISCARD/ : {
-    *(.eh_frame)
     *(.comment)
   }
 }

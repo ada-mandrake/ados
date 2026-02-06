@@ -107,9 +107,24 @@ package body VGA is
    end Write_Char;
 
    procedure Write_String (S : String) is
+      C : Integer := S'First;
    begin
-      for C of S loop
-         Write_Char (C);
+      while C <= S'Last loop
+         if S (C) = '\' and then C < S'Last then
+            case S (C + 1) is
+               when 'n' =>
+                  VGA_Column := 0;
+                  VGA_Row := VGA_Row + 1;
+               when 'r' => VGA_Column := 0;
+               when 't' => VGA_Column := VGA_Column + 4;
+               when '\' => Write_Char ('\');
+               when others => null;
+            end case;
+            C := C + 2;
+         else
+            Write_Char (S (C));
+            C := C + 1;
+         end if;
       end loop;
    end Write_String;
 

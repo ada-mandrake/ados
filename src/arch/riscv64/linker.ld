@@ -1,40 +1,40 @@
-ENTRY(_start)
-
-. = 0x80000000;
+OUTPUT_FORMAT("elf64-littleriscv")
+OUTPUT_ARCH("riscv");
+ENTRY("_start");
 
 SECTIONS {
-  .boot : ALIGN(4K) {
-    KEEP(*(.boot))
-  }
+  . = 0x80000000;
 
   .text : ALIGN(4K) {
+    KEEP(*(.init))
     *(.text);
     *(.text.*);
   }
 
-  .bss : ALIGN(4K) {
-    PROVIDE(bss_start = .);
-    *(.bss);
-    *(COMMON);
-    . += 4096;
-    PROVIDE(stack_top = .);
-    . += 4096;
-    PROVIDE(global_pointer = .);
-    PROVIDE(bss_end = . );
-  } 
-
   .rodata : ALIGN(4K) {
     *(.rodata);
-    *(.rodata*);
-  } 
+    *(.rodata.*);
+  }
 
   .data : ALIGN(4K) {
     *(.data);
-    *(.data*);
-  } 
+    *(.data.*);
+  }
+
+  .bss : ALIGN(4K) {
+    *(.bss);
+    *(.bss.*);
+    *(COMMON);
+    . = ALIGN(16);
+    PROVIDE(stack_top = .);
+    . += 4096;
+    PROVIDE(global_pointer = .);
+  }
 
   /DISCARD/ : {
-    *(.eh_frame);
-    *(.comment);
+    *(.comment)
   }
+
+  . = ALIGN(8);
+  __end = .;
 }

@@ -3,7 +3,7 @@ with Stack;
 with System.Storage_Elements; use System.Storage_Elements;
 with System.Machine_Code; use System.Machine_Code;
 
-package body x86.TSS is
+package body TSS is
    procedure Initialise_TSS is
    begin
       Task_State_Segment.Link := 0;
@@ -31,4 +31,4 @@ package body x86.TSS is
    begin
       Task_State_Segment.ESP0 := Stack;
    end Set_Kernel_Stack;
-end x86.TSS;
+end TSS;
