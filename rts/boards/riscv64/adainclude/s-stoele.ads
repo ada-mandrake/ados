@@ -1,1 +1,0 @@
-../../../src/s-stoele.ads
