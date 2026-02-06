@@ -1,6 +1,23 @@
+--
+--  Mandrake Ada operating system
+--  Copyright (C) 2026  Winterer, Mathis Aaron
+--
+--  This program is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 library project RTS is
-   type Arch_Name is ("x86", "x86_64", "riscv32", "riscv64");
-   type Board_Name is ("x86", "x86_64", "riscv32", "riscv64");
+   type Arch_Name is ("x86", "riscv64");
+   type Board_Name is ("x86",  "riscv64");
    type Build_Type is ("debug", "release");
 
    Arch : Arch_Name  := "x86";
@@ -10,10 +27,6 @@ library project RTS is
    case Board is
       when "x86" =>
          Arch := "x86";
-      when "x86_64" =>
-         Arch := "x86_64";
-      when "riscv32" =>
-         Arch := "riscv32";
       when "riscv64" =>
          Arch := "riscv64";
    end case;
@@ -44,10 +57,6 @@ library project RTS is
       case Board is
          when "x86" =>
             Shared := Shared & ("-m32", "-march=i686");
-         when "x86_64" =>
-            Shared := Shared & ("-m64", "-march=x86-64");
-         when "riscv32" =>
-            Shared := Shared & ("-march=rv32g", "-mabi=ilp32");
          when "riscv64" =>
             Shared := Shared & ("-march=rv64g", "-mabi=lp64");
       end case;
