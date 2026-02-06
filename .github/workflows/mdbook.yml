@@ -25,10 +25,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install mdbook
-        run: |
-          curl --proto '=https' --tlsv1.2 https://sh.rustup.sh -sSf -y | sh
-          rustup update
-          cargo install mdbook
+        uses: taiki-e/install-action@v2
+        with:
+          tool: mdbook
       - name: Setup pages
         id: pages
         uses: actions/configure-pages@v5
