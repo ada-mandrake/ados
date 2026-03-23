@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-ARCH ?= x86
+ARCH ?= i686
 RTS_PATH := $(CURDIR)/build/rts/$(ARCH)
 MODE ?= debug
 

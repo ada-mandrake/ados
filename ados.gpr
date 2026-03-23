@@ -16,10 +16,10 @@
 --  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 project Ados is
-   type Arches is ("x86", "riscv64");
+   type Arches is ("i686", "riscv64");
    type Build_Type is ("debug", "release");
 
-   Arch : Arches := external ("Arch", "x86");
+   Arch : Arches := external ("Arch", "i686");
    Mode : Build_Type := external ("Mode", "debug");
 
    for Languages use ("Ada");
@@ -30,7 +30,7 @@ project Ados is
    for Main use ("main.adb");
 
    case Arch is
-      when "x86" =>
+      when "i686" =>
          for Target use "i686-elf";
       when "riscv64" =>
          for Target use "riscv64-elf";
@@ -42,7 +42,7 @@ project Ados is
       Basic_Switches := (
          "-gnat2022",
          "-gnatg",
-         "-gnatec=/root/ados/src/arch/" & Arch & "/gnat.adc",
+         "-gnatec=/home/fedora/ados/src/arch/" & Arch & "/gnat.adc",
          "-gnaty+I",
          "-gnaty+d"
       );
@@ -66,7 +66,7 @@ project Ados is
       );
 
       case Arch is
-         when "x86" =>
+         when "i686" =>
             Shared := Shared & ("-m32", "-march=i686");
          when "riscv64" =>
             Shared := Shared & ("-march=rv64g", "-mabi=lp64d", "-mcmodel=medany");
@@ -81,8 +81,6 @@ project Ados is
 
       for Default_Switches ("Ada") use Shared;
       case Arch is
-         when "riscv32" =>
-            for Default_Switches ("Asm_Cpp") use ("-Wa,-march=rv32g_zilsd");
          when "riscv64" =>
             for Default_Switches ("Asm_Cpp") use ("-Wa,-march=rv64g_zilsd");
          when others => null;
@@ -92,18 +90,18 @@ project Ados is
 
    package Binder is
       case Arch is
-         when "x86" =>
-            for Switches ("Ada") use ("-I/root/ados/build/rts/x86/lib");
+         when "i686" =>
+            for Switches ("Ada") use ("-I/home/fedora/ados/build/rts/i686/lib");
          when "riscv64" =>
-            for Switches ("Ada") use ("-I/root/ados/build/rts/riscv64/lib");
+            for Switches ("Ada") use ("-I/home/fedora/ados/build/rts/riscv64/lib");
       end case;
    end Binder;
 
    package Linker is
       case Arch is
-         when "x86" =>
+         when "i686" =>
             for Default_Switches ("Ada") use (
-               "-L/root/ados/build/rts/x86/lib",
+               "-L/home/fedora/ados/build/rts/i686/lib",
                "-nostartfiles",
                "-nodefaultlibs",
                "-nostdlib",
@@ -115,11 +113,11 @@ project Ados is
                "-lgcc",
                "-Wl,--end-group",
                "-Wl,-z,noexecstack",
-               "-T/root/ados/src/arch/" & Arch & "/linker.ld"
+               "-T/home/fedora/ados/src/arch/" & Arch & "/linker.ld"
             );
          when "riscv64" =>
             for Default_Switches ("Ada") use (
-               "-L/root/ados/build/rts/riscv64/lib",
+               "-L/home/fedora/ados/build/rts/riscv64/lib",
                "-nostartfiles",
                "-nodefaultlibs",
                "-nostdlib",
@@ -132,7 +130,7 @@ project Ados is
                "-Wl,--end-group",
                "-Wl,-z,noexecstack",
                "-mcmodel=medany",
-               "-T/root/ados/src/arch/" & Arch & "/linker.ld"
+               "-T/home/fedora/ados/src/arch/" & Arch & "/linker.ld"
             );
       end case;
    end Linker;

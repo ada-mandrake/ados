@@ -16,25 +16,28 @@
 --  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 library project RTS is
-   type Arch_Name is ("x86", "riscv64");
-   type Board_Name is ("x86",  "riscv64");
+   type Arch_Name is ("i686", "riscv64");
+   type Board_Name is ("i686",  "riscv64");
    type Build_Type is ("debug", "release");
 
-   Arch : Arch_Name  := "x86";
-   Board : Board_Name := external ("Board", "x86");
+   Arch : Arch_Name  := "i686";
+   Board : Board_Name := external ("Board", "i686");
    Mode : Build_Type := external ("Mode", "debug"); 
 
    case Board is
-      when "x86" =>
-         Arch := "x86";
+      when "i686" =>
+         Arch := "i686";
       when "riscv64" =>
          Arch := "riscv64";
    end case;
+
+   for Runtime ("Ada") use "boards/" & Arch;
+   for Target use Arch & "-elf";
    
    for Create_Missing_Dirs use "True";
    for Source_Dirs use ("boards/" & Arch & "/adainclude");
-   for Object_Dir use "/root/ados/build/rts/" & Board & "/obj";
-   for Languages use ("Ada", "Asm_Cpp");
+   for Object_Dir use "/home/fedora/ados/build/rts/" & Board & "/obj";
+   for Languages use ("Ada");
 
    package Builder is
       for Global_Configuration_Pragmas use "gnat.adc";
@@ -55,7 +58,7 @@ library project RTS is
       );
 
       case Board is
-         when "x86" =>
+         when "i686" =>
             Shared := Shared & ("-m32", "-march=i686");
          when "riscv64" =>
             Shared := Shared & ("-march=rv64g", "-mabi=lp64");
@@ -76,8 +79,5 @@ library project RTS is
 
    for Library_Kind use "static";
    for Library_Name use "gnat";
-   for Library_Dir use "/root/ados/build/rts/" & Board & "/lib";
-
-   for Runtime ("Ada") use "boards/" & Arch;
-   for Target use Arch & "-elf";
+   for Library_Dir use "/home/fedora/ados/build/rts/" & Board & "/lib";
 end RTS;
